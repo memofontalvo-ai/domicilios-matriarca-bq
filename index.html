@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#7A1F33"><meta name="version" content="1.1.0"></head><body>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#7A1F33"><meta name="version" content="1.1.1"></head><body>
 <title>La Matriarca Domicilios</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -275,6 +275,10 @@ details.demo summary{min-height:44px;display:flex;align-items:center;cursor:poin
 .sbox>svg{position:absolute;left:14px;width:22px;height:22px;stroke:#8a7a7e;fill:none;stroke-width:2;stroke-linecap:round}
 .sbox input{width:100%;height:48px;border:0;background:transparent;padding:0 96px 0 44px;color:#251317;border-radius:999px;min-width:0}
 .sbox input::placeholder{color:#8a7a7e}
+.backbar{display:flex;flex-direction:column;gap:6px;margin:4px 0 8px}
+.backbtn{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:48px;padding:0 18px 0 12px;border:2px solid var(--brand);border-radius:999px;background:var(--surface);color:var(--brand);font-weight:800;font-size:1rem}
+.backbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.backtx{font-size:.85rem;overflow-wrap:anywhere}
 .sugg{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;background:#fff;color:#251317;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.28);overflow:hidden;max-height:60vh;overflow-y:auto}
 .sg{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:6px 12px;border:0;background:none;color:inherit;text-align:left;border-top:1px solid #eee}
 .sg:first-child{border-top:0}
@@ -357,7 +361,7 @@ footer.ft{padding:28px 0 8px;color:var(--muted);font-size:.85rem;text-align:cent
    1. CONFIGURACIÓN CENTRAL  (todo lo marcado PROVISIONAL debe confirmarse)
    ========================================================================== */
 /* VERSIÓN DE LA APP: subir en cada cambio (ver CHANGELOG.md) */
-const APP_VERSION = '1.1.0', APP_FECHA = '2026-10-12';
+const APP_VERSION = '1.1.1', APP_FECHA = '2026-10-12';
 const CONFIG = {
   modoPrueba: true,                       // muestra aviso "versión de prueba"; poner false al conectar el backend
   marca: { nombre:'La Matriarca', ciudad:'Barranquilla', logo:null /* URL o data: URI del logo */, monograma:'LM' },
@@ -772,6 +776,10 @@ function homeBody(){
     h+=carouselHtml('promos','¡Promociones!',PV().filter(p=>esPromo(p)&&!p.agotado),'fPromo');
     h+=carouselHtml('dest','Destacados',PV().filter(p=>p.destacado),'fDest');
   }
+  if(plano){
+    const act=[]; if(U.q.trim()) act.push(`“${esc(U.q.trim())}”`); if(U.fPromo) act.push('Promociones'); if(U.fDest) act.push('Destacados'); if(U.fDisp) act.push('Disponibles'); if(U.sort) act.push('Orden');
+    h+=`<div class="backbar"><button class="backbtn" data-a="volver">${IC.back}<span>Volver a toda la carta</span></button><span class="muted backtx">Filtro: ${act.join(' · ')}</span></div>`;
+  }
   h+=filtersHtml();
   if(plano){
     const l=listaFiltrada();
@@ -1100,6 +1108,7 @@ document.addEventListener('click',async ev=>{
     case 'cat': { if(esPlano()){ U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); } const el=document.getElementById('sec-'+t.dataset.c); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); break; }
     case 'cta': { if(U.screen!=='menu') break; const d=t.dataset.d; if(!d) break; if(esPlano()){ U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); } const el=document.getElementById('sec-'+d); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); break; }
     case 'more': { U.q=''; U.sort=''; U.fPromo=t.dataset.k==='fPromo'; U.fDest=t.dataset.k==='fDest'; U.fDisp=false; render(); window.scrollTo({top:document.getElementById('results').offsetTop-80,behavior:'smooth'}); break; }
+    case 'volver': { U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); window.scrollTo({top:0,behavior:'smooth'}); break; }
     case 'clearq': U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); { const q=document.getElementById('q'); if(q) q.focus(); } break;
     case 'sugg': { U.q=t.dataset.n; const qi=document.getElementById('q'); if(qi){ qi.value=U.q; qi.blur(); } refreshSugg(false); const r=document.getElementById('results'); if(r){ r.innerHTML=homeBody(); window.scrollTo({top:r.offsetTop-80,behavior:'smooth'}); } break; }
     case 'dosearch': { refreshSugg(false); const r=document.getElementById('results'); const q=document.getElementById('q'); if(q) q.blur(); if(r) window.scrollTo({top:r.offsetTop-80,behavior:'smooth'}); break; }
