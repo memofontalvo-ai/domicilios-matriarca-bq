@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#7A1F33"><meta name="version" content="1.0.0"></head><body>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#7A1F33"><meta name="version" content="1.1.0"></head><body>
 <title>La Matriarca Domicilios</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -275,6 +275,17 @@ details.demo summary{min-height:44px;display:flex;align-items:center;cursor:poin
 .sbox>svg{position:absolute;left:14px;width:22px;height:22px;stroke:#8a7a7e;fill:none;stroke-width:2;stroke-linecap:round}
 .sbox input{width:100%;height:48px;border:0;background:transparent;padding:0 96px 0 44px;color:#251317;border-radius:999px;min-width:0}
 .sbox input::placeholder{color:#8a7a7e}
+.sugg{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;background:#fff;color:#251317;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.28);overflow:hidden;max-height:60vh;overflow-y:auto}
+.sg{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:6px 12px;border:0;background:none;color:inherit;text-align:left;border-top:1px solid #eee}
+.sg:first-child{border-top:0}
+.sg:active,.sg:hover{background:#f6efef}
+.sg-i{flex:none;width:44px;height:44px;border-radius:10px;overflow:hidden;background:hsl(var(--h,12) 45% 82%)}
+.sg-i img{width:100%;height:100%;object-fit:cover;display:block}
+.sg-t{display:flex;flex-direction:column;min-width:0}
+.sg-t b{font-weight:600;overflow-wrap:anywhere}
+.sg-t mark{background:none;color:var(--brand);font-weight:800}
+.sg-t small{color:#6b5a5e}
+.sg-none{padding:14px 16px;color:#6b5a5e;font-size:.9rem}
 .sgo{position:absolute;right:5px;top:5px;height:38px;padding:0 16px;border:0;border-radius:999px;background:var(--brand-deep);color:#fff;font-weight:800}
 .slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-top:6px}
 .slides::-webkit-scrollbar{display:none}
@@ -346,7 +357,7 @@ footer.ft{padding:28px 0 8px;color:var(--muted);font-size:.85rem;text-align:cent
    1. CONFIGURACIÓN CENTRAL  (todo lo marcado PROVISIONAL debe confirmarse)
    ========================================================================== */
 /* VERSIÓN DE LA APP: subir en cada cambio (ver CHANGELOG.md) */
-const APP_VERSION = '1.0.0', APP_FECHA = '2026-10-12';
+const APP_VERSION = '1.1.0', APP_FECHA = '2026-10-12';
 const CONFIG = {
   modoPrueba: true,                       // muestra aviso "versión de prueba"; poner false al conectar el backend
   marca: { nombre:'La Matriarca', ciudad:'Barranquilla', logo:null /* URL o data: URI del logo */, monograma:'LM' },
@@ -705,12 +716,34 @@ const SORTS={'':'Predeterminado',asc:'Precio: menor a mayor',desc:'Precio: mayor
 const esPlano = () => !!(U.q.trim()||U.fPromo||U.fDest||U.fDisp||U.sort);
 function listaFiltrada(){
   const sd=sede(); let l=PV(); const q=norm(U.q);
-  if(q) l=l.filter(p=>norm(p.nombre).includes(q)||norm(p.desc).includes(q));
+  if(q){ const tk=q.split(/\s+/).filter(Boolean); l=l.filter(p=>{ const c=CATEGORIAS.find(x=>x.id===p.cat); const h=norm(p.nombre+' '+p.desc+' '+(c?c.nombre:'')); return tk.every(t=>h.includes(t)); }); }
   if(U.fPromo) l=l.filter(esPromo); if(U.fDest) l=l.filter(p=>p.destacado); if(U.fDisp) l=l.filter(p=>!agotadoP(p,sd));
   if(U.sort==='asc') l=[...l].sort((a,b)=>precioDesde(a)-precioDesde(b));
   if(U.sort==='desc') l=[...l].sort((a,b)=>precioDesde(b)-precioDesde(a));
   if(U.sort==='az') l=[...l].sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
   return l;
+}
+function sugBusqueda(qs){
+  const q=norm(qs).trim(); if(!q) return [];
+  const tk=q.split(/\s+/).filter(Boolean); const sd=sede();
+  return PV().map(p=>{ const n=norm(p.nombre); if(!tk.every(t=>n.includes(t))) return null;
+    const sc=n.startsWith(q)?0:n.split(' ').some(w=>w.startsWith(tk[0]))?1:2; return {p,sc,n}; })
+    .filter(Boolean).sort((a,b)=>a.sc-b.sc||a.n.localeCompare(b.n,'es')).slice(0,6).map(x=>x.p);
+}
+function marcar(nombre,qs){
+  const tk=norm(qs).split(/\s+/).filter(Boolean); if(!tk.length) return esc(nombre);
+  const n=norm(nombre); const mk=new Array(nombre.length).fill(false);
+  if(n.length===nombre.length) tk.forEach(t=>{ let i=n.indexOf(t); while(i>=0){ for(let k=i;k<i+t.length;k++) mk[k]=true; i=n.indexOf(t,i+t.length); } });
+  let out='',on=false; for(let i=0;i<nombre.length;i++){ if(mk[i]!==on){ out+=mk[i]?'<mark>':'</mark>'; on=mk[i]; } out+=esc(nombre[i]); } if(on) out+='</mark>'; return out;
+}
+function suggHtml(){
+  const l=sugBusqueda(U.q); if(!l.length) return U.q.trim()?'<div class="sg-none">Sin coincidencias. Prueba otra palabra.</div>':'';
+  const sd=sede();
+  return l.map(p=>{ const f=fotoDe(p); return `<button type="button" class="sg" role="option" data-a="sugg" data-n="${esc(p.nombre)}"><span class="sg-i" style="--h:${p.h??12}">${f?`<img src="${esc(f)}" alt="">`:''}</span><span class="sg-t"><b>${marcar(p.nombre,U.q)}</b><small>${agotadoP(p,sd)?'Agotado':fmt(precioDesde(p))}</small></span></button>`; }).join('');
+}
+function refreshSugg(show){
+  const b=document.getElementById('sugg'); if(!b) return; const h=show?suggHtml():''; b.innerHTML=h; b.hidden=!h;
+  const q=document.getElementById('q'); if(q) q.setAttribute('aria-expanded',h?'true':'false');
 }
 function tileList(){
   const promos=PV().filter(p=>esPromo(p)&&!p.agotado); const out=[];
@@ -771,7 +804,7 @@ function vMenu(){
       ${S.modo==='domicilio'?`<button class="addr-top" data-a="zona" id="btn-zona" aria-label="Dirección de entrega: ${esc(dirTxt)}">${IC.pin}<span>${esc(dirTxt)}</span>${IC.chev}</button>`
         :(multi?`<button class="addr-top" data-a="sede" id="btn-sede">${IC.pin}<span>${esc(sd.nombre)}</span>${IC.chev}</button>`:`<div class="addr-top">${IC.pin}<span>${esc(sd.nombre)}</span></div>`)}
       <button class="hbtn plain" data-a="ayuda" aria-label="Ayuda">${IC.help}</button></div>
-    <div class="srow"><div class="sbox"><label class="sr" for="q">Buscar en la carta</label>${IC.search}<input id="q" type="search" inputmode="search" autocomplete="off" placeholder="Buscar platos" value="${esc(U.q)}"><button class="sgo" data-a="dosearch">Buscar</button></div>
+    <div class="srow"><div class="sbox"><label class="sr" for="q">Buscar en la carta</label>${IC.search}<input id="q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" role="combobox" aria-expanded="false" aria-controls="sugg" aria-autocomplete="list" placeholder="Buscar platos" value="${esc(U.q)}"><button class="sgo" data-a="dosearch">Buscar</button><div id="sugg" class="sugg" role="listbox" aria-label="Sugerencias" hidden></div></div>
       <button class="hbtn" data-a="orders" aria-label="Mi pedido">${IC.clip}</button>
       <button class="hbtn" data-a="go" data-s="cart" aria-label="Ver carrito, ${n} unidades">${IC.cart}${n?`<span class="cnt num">${n}</span>`:''}</button></div>
     <div class="slides" role="list" aria-label="Novedades">${slides.length?slides.map(b=>bannerHtml(b)).join(''):`<div class="slide" role="listitem" style="--h:12"><div class="slide-art"><div class="plate"></div></div><div class="slide-tx"><h2>${esc(CONFIG.marca.nombre)}</h2><p>Pide a domicilio o recoge en el restaurante.</p></div></div>`}</div>
@@ -1068,7 +1101,8 @@ document.addEventListener('click',async ev=>{
     case 'cta': { if(U.screen!=='menu') break; const d=t.dataset.d; if(!d) break; if(esPlano()){ U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); } const el=document.getElementById('sec-'+d); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); break; }
     case 'more': { U.q=''; U.sort=''; U.fPromo=t.dataset.k==='fPromo'; U.fDest=t.dataset.k==='fDest'; U.fDisp=false; render(); window.scrollTo({top:document.getElementById('results').offsetTop-80,behavior:'smooth'}); break; }
     case 'clearq': U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); { const q=document.getElementById('q'); if(q) q.focus(); } break;
-    case 'dosearch': { const r=document.getElementById('results'); const q=document.getElementById('q'); if(q) q.blur(); if(r) window.scrollTo({top:r.offsetTop-80,behavior:'smooth'}); break; }
+    case 'sugg': { U.q=t.dataset.n; const qi=document.getElementById('q'); if(qi){ qi.value=U.q; qi.blur(); } refreshSugg(false); const r=document.getElementById('results'); if(r){ r.innerHTML=homeBody(); window.scrollTo({top:r.offsetTop-80,behavior:'smooth'}); } break; }
+    case 'dosearch': { refreshSugg(false); const r=document.getElementById('results'); const q=document.getElementById('q'); if(q) q.blur(); if(r) window.scrollTo({top:r.offsetTop-80,behavior:'smooth'}); break; }
     case 'orders': if(S.ultimoPedido&&Api.obtenerPedido(S.ultimoPedido)) go('track'); else toast('Aún no tienes pedidos'); break;
     case 'sortdlg': openDialog(vSortDlg,t); break;
     case 'fpromo': U.fPromo=!U.fPromo; refreshHome(); break;
@@ -1151,7 +1185,7 @@ document.addEventListener('input',ev=>{
   if(t.dataset.af!==undefined){ adminInput(t); return; }
   if(t.id==='a-pq'){ A.pq=t.value; const l=document.getElementById('a-plist'); if(l) l.innerHTML=aProdList(); return; }
   if(t.id==='pk-q'){ A.pkq=t.value; const g=document.getElementById('pk-grid'); if(g) g.innerHTML=pickGrid(); return; }
-  if(t.id==='q'){ U.q=t.value; const r=document.getElementById('results'); if(r) r.innerHTML=homeBody(); return; }
+  if(t.id==='q'){ U.q=t.value; const r=document.getElementById('results'); if(r) r.innerHTML=homeBody(); refreshSugg(true); return; }
   if(t.dataset.ch==='nota'){ D.nota=t.value; return; }
   if(t.dataset.ch==='con'){ S.pago.efectivoCon=t.value.replace(/\D/g,''); t.value=S.pago.efectivoCon; save(); refreshReview(); return; }
   if(t.dataset.ch==='tipval'){ S.propina=Number(t.value.replace(/\D/g,''))||0; t.value=S.propina||''; save(); refreshReview(); return; }
@@ -1160,6 +1194,10 @@ document.addEventListener('input',ev=>{
     const id=t.id.replace('f-',''); if(U.errors[id]){ delete U.errors[id]; const fld=t.closest('.field'); if(fld){ fld.classList.remove('bad'); const er=fld.querySelector('.err'); if(er) er.remove(); } }
   }
 });
+document.addEventListener('focusin',ev=>{ if(ev.target.id==='q'&&U.q.trim()) refreshSugg(true); });
+document.addEventListener('focusout',ev=>{ if(ev.target.id==='q') setTimeout(()=>{ if(document.activeElement&&document.activeElement.id==='q') return; refreshSugg(false); },120); });
+document.addEventListener('pointerdown',ev=>{ if(ev.target.closest&&ev.target.closest('#sugg')) ev.preventDefault(); });
+document.addEventListener('keydown',ev=>{ if(ev.target.id==='q'){ if(ev.key==='Escape') refreshSugg(false); else if(ev.key==='Enter'){ refreshSugg(false); ev.target.blur(); const r=document.getElementById('results'); if(r) window.scrollTo({top:r.offsetTop-80,behavior:'smooth'}); } } });
 document.addEventListener('focusin',ev=>{ const t=ev.target; if(t.matches&&t.matches('input,textarea,select')&&!DLG) setTimeout(()=>t.scrollIntoView({block:'center',behavior:'smooth'}),250); });
 function refreshReview(){ const tmp=document.createElement('div'); tmp.innerHTML=vRevision();
   for(const id of ['rv-total','rv-bar','rv-cashmsg']){ const n=document.getElementById(id), m=tmp.querySelector('#'+id); if(n&&m) n.replaceWith(m); } }
