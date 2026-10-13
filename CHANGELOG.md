@@ -1,5 +1,12 @@
 # Historial de versiones — La Matriarca Domicilios
 
+## 1.3.1 — 2026-10-12
+- Se quitó el aviso de "Versión de prueba" de la portada. (El aviso de la pantalla de seguimiento del pedido se mantiene mientras los pedidos no lleguen a la cocina.)
+
+## 1.3.0 — 2026-10-12
+- Logo oficial de La Matriarca Barranquilla (blanco) en la parte superior de la portada, a la izquierda de la dirección. Si se sube otro logo en el administrador (Marca), ese lo reemplaza.
+- La dirección de entrega puede ocupar dos líneas para que se lea completa en pantallas pequeñas.
+
 ## 1.2.2 — 2026-10-12
 - El "Desde $X" de cada grupo de la carta (lista y página del grupo) ahora va en naranja y negrita, igual que los precios.
 
