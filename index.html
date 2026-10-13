@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#7A1F33"><meta name="version" content="1.1.1"></head><body>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#7A1F33"><meta name="version" content="1.2.2"></head><body>
 <title>La Matriarca Domicilios</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -8,7 +8,7 @@
 /* Layout: carta en columna (1/2/3 columnas según ancho), barra inferior fija, hojas inferiores para personalizar. Móvil primero. */
 :root{
   --bg:#F7F2F1; --surface:#FFFFFF; --fg:#251317; --muted:#6B5A5F; --line:#E7DCDD;
-  --brand:#7A1F33; --brand-ink:#FFFFFF; --brand-soft:#F6E6E9; --price:#7A1F33;
+  --brand:#7A1F33; --brand-ink:#FFFFFF; --brand-soft:#F6E6E9; --price:#7A1F33; --money:#D9531A;
   --gold:#B87A0E; --gold-soft:#FBF0D9;
   --ok:#1D7448; --ok-soft:#E1F3E9; --warn:#8A5200; --warn-soft:#FFF0D1; --err:#B3261E; --err-soft:#FCE6E4;
   --scrim:rgba(30,12,17,.55); --shadow:0 8px 30px rgba(60,20,30,.14);
@@ -18,7 +18,7 @@
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#150C0F; --surface:#221419; --fg:#F6ECED; --muted:#B79EA4; --line:#3A262C;
-  --brand:#B83A52; --brand-ink:#FFFFFF; --brand-soft:#3A1B24; --price:#F2A7B3;
+  --brand:#B83A52; --brand-ink:#FFFFFF; --brand-soft:#3A1B24; --price:#F2A7B3; --money:#FF8A50; --money:#FF8A50;
   --gold:#E3B04B; --gold-soft:#3A2D12;
   --ok:#59C98C; --ok-soft:#14301F; --warn:#F0B35A; --warn-soft:#3A2A0E; --err:#FF8E86; --err-soft:#3E1714;
   --scrim:rgba(0,0,0,.7); --shadow:0 8px 30px rgba(0,0,0,.5); color-scheme:dark}}
@@ -108,9 +108,9 @@ p{margin:0}
 .card-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
 .card-txt h3{font:700 1rem var(--f-body);overflow-wrap:anywhere}
 .card-txt p{color:var(--muted);font-size:.88rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.price{font-weight:700;color:var(--price)}
-.price s{color:var(--muted);font-weight:400;margin-left:6px;font-size:.88rem}
-.tag{align-self:flex-start;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--gold-soft);color:var(--warn)}
+.price{font-weight:800;font-size:1.12rem;color:var(--money)}
+.price s{display:block;color:var(--muted);font-weight:500;font-size:.88rem;margin-top:1px}
+.tag{align-self:flex-start;font-size:.75rem;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--money);color:#fff}
 .tag.off{background:var(--err-soft);color:var(--err)}
 .photo{position:relative;flex:none;width:112px;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:hsl(var(--h,12) 45% 82%)}
 .photo img{width:100%;height:100%;object-fit:cover;display:block}
@@ -182,7 +182,7 @@ p{margin:0}
 .choice:has(input:checked){border-color:var(--brand);background:var(--brand-soft)}
 .choice input{width:22px;height:22px;accent-color:var(--brand);flex:none}
 .choice .t{flex:1;min-width:0;overflow-wrap:anywhere}
-.choice .p{color:var(--price);font-weight:600;white-space:nowrap}
+.choice .p{color:var(--money);font-weight:600;white-space:nowrap}
 .choice.off{opacity:.5;cursor:not-allowed}
 .cover{padding:12px 14px;border-radius:12px;font-size:.92rem;margin-bottom:14px}
 .cover.ok{background:var(--ok-soft);color:var(--ok)} .cover.bad{background:var(--err-soft);color:var(--err)} .cover.info{background:var(--bg);border:1px dashed var(--line);color:var(--muted)}
@@ -275,6 +275,31 @@ details.demo summary{min-height:44px;display:flex;align-items:center;cursor:poin
 .sbox>svg{position:absolute;left:14px;width:22px;height:22px;stroke:#8a7a7e;fill:none;stroke-width:2;stroke-linecap:round}
 .sbox input{width:100%;height:48px;border:0;background:transparent;padding:0 96px 0 44px;color:#251317;border-radius:999px;min-width:0}
 .sbox input::placeholder{color:#8a7a7e}
+.desde{color:var(--money);font-weight:800}
+.clist{display:flex;flex-direction:column;gap:4px}
+.cl{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;border:0;background:none;padding:10px 0;color:inherit;min-height:44px}
+.cl-img{flex:none;width:120px;height:120px;border-radius:20px;overflow:hidden;background:hsl(var(--h,12) 45% 82%)}
+.cl-img img,.cl-img .plate{width:100%;height:100%;object-fit:cover;display:block}
+.cl-t{display:flex;flex-direction:column;gap:4px;min-width:0;padding-top:4px;align-items:flex-start}
+.cl-t b{font:800 1.2rem/1.15 var(--f-body);overflow-wrap:anywhere}
+.cat-hero{position:relative;height:clamp(210px,56vw,320px);background:hsl(var(--h,12) 45% 70%);overflow:hidden}
+.cat-hero img,.cat-hero .plate{width:100%;height:100%;object-fit:cover;display:block}
+.cat-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),transparent 45%);pointer-events:none}
+.cat-top{position:absolute;z-index:2;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 0}
+.cat-btns{display:flex;gap:10px}
+.cat-btn{position:relative;width:44px;height:44px;border-radius:50%;border:0;background:rgba(60,15,25,.8);color:#fff;display:grid;place-items:center}
+.cat-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cat-btn .cnt{position:absolute;top:-6px;right:-6px;min-width:22px;height:22px;padding:0 5px;border-radius:999px;background:var(--brand);color:var(--brand-ink);font-size:.78rem;font-weight:800;display:grid;place-items:center;border:2px solid #fff}
+.cat-sheet{background:var(--surface);border-radius:28px 28px 0 0;margin-top:-28px;position:relative;padding:20px 16px 0;min-height:70vh}
+.cat-head{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.cat-logo{flex:none;width:72px;height:72px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:hsl(var(--h,12) 45% 82%)}
+.cat-logo img{width:100%;height:100%;object-fit:cover;display:block}
+.cat-h1{font:800 1.6rem/1.1 var(--f-body);overflow-wrap:anywhere}
+.cat-chips{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.cat-chips .status{background:var(--bg);border:0}
+.cat-note{background:var(--brand-soft);border-radius:14px;padding:10px 12px;font-size:.9rem}
+.cat-search{background:var(--bg);margin-bottom:6px}
+.cat-search input{padding-right:14px}
 .backbar{display:flex;flex-direction:column;gap:6px;margin:4px 0 8px}
 .backbtn{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:48px;padding:0 18px 0 12px;border:2px solid var(--brand);border-radius:999px;background:var(--surface);color:var(--brand);font-weight:800;font-size:1rem}
 .backbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
@@ -361,7 +386,7 @@ footer.ft{padding:28px 0 8px;color:var(--muted);font-size:.85rem;text-align:cent
    1. CONFIGURACIÓN CENTRAL  (todo lo marcado PROVISIONAL debe confirmarse)
    ========================================================================== */
 /* VERSIÓN DE LA APP: subir en cada cambio (ver CHANGELOG.md) */
-const APP_VERSION = '1.1.1', APP_FECHA = '2026-10-12';
+const APP_VERSION = '1.2.2', APP_FECHA = '2026-10-12';
 const CONFIG = {
   modoPrueba: true,                       // muestra aviso "versión de prueba"; poner false al conectar el backend
   marca: { nombre:'La Matriarca', ciudad:'Barranquilla', logo:null /* URL o data: URI del logo */, monograma:'LM' },
@@ -484,7 +509,7 @@ let S = (()=>{ try{ const r=JSON.parse(st.get(KEY)||'null'); if(r&&typeof r==='o
 if(!sedesActivas().some(s=>s.id===S.sedeId)) S.sedeId=sedesActivas()[0].id;
 applyBrand();
 const save = () => st.set(KEY, JSON.stringify(S));
-const U = { screen:'menu', q:'', cat:'', sort:'', fPromo:false, fDest:false, fDisp:false, errors:{}, avisos:[], enviando:false, errEnvio:'', cuponMsg:'', cuponOk:false, verTodoPedido:false };
+const U = { screen:'menu', catId:'', cq:'', menuScroll:0, q:'', cat:'', sort:'', fPromo:false, fDest:false, fDisp:false, errors:{}, avisos:[], enviando:false, errEnvio:'', cuponMsg:'', cuponOk:false, verTodoPedido:false };
 const sede = () => CONFIG.sedes.find(s=>s.id===S.sedeId&&s.activa)||sedesActivas()[0];
 const zonaSel = () => (sede().zonas||[]).find(z=>z.id===S.dir.zonaId)||null;
 
@@ -713,8 +738,8 @@ function promoCard(p, sd){
   const ag=agotadoP(p,sd), pr=esPromo(p);
   return `<article class="pc${ag?' agotado':''}"><div class="pc-iw"><button class="pc-img" data-a="open" data-pid="${p.id}" aria-label="Ver ${esc(p.nombre)}">${fotoDe(p)?`<img src="${esc(fotoDe(p))}" alt="" loading="lazy">`:`<span class="plate" style="--h:${p.h??12}"></span>`}</button>
     <button class="add" data-a="quick" data-pid="${p.id}" ${ag?'disabled':''} aria-label="${needsSheet(p)?'Personalizar y agregar':'Agregar'} ${esc(p.nombre)}">${IC.plus}</button></div>
-    <button class="pc-t" data-a="open" data-pid="${p.id}">${pr&&!ag?`<span class="tag">${esc(p.etiqueta||'Promo')}</span>`:''}${ag?'<span class="tag off">Agotado</span>':''}<b>${esc(p.nombre)}</b>
-    <span class="price num">${variantesDistintas(p)?'Desde ':''}${fmt(precioDesde(p))}${pr?`<s>${fmt(p.precioAnterior)}</s>`:''}</span></button></article>`;
+    <button class="pc-t" data-a="open" data-pid="${p.id}"><b>${esc(p.nombre)}</b>
+    <span class="price num">${variantesDistintas(p)?'Desde ':''}${fmt(precioDesde(p))}${pr?`<s>${fmt(p.precioAnterior)}</s>`:''}</span>${pr&&!ag?`<span class="tag">${esc(p.etiqueta||'Promo')}</span>`:''}${ag?'<span class="tag off">Agotado</span>':''}</button></article>`;
 }
 const SORTS={'':'Predeterminado',asc:'Precio: menor a mayor',desc:'Precio: mayor a menor',az:'Nombre (A–Z)'};
 const esPlano = () => !!(U.q.trim()||U.fPromo||U.fDest||U.fDisp||U.sort);
@@ -769,6 +794,41 @@ function filtersHtml(){
     <button class="chip" data-a="sortdlg" aria-pressed="${!!U.sort}">${U.sort?esc(SORTS[U.sort]):'Ordenar'} ${IC.down}</button>
     <button class="chip" data-a="fpromo" aria-pressed="${!!U.fPromo}">Promociones</button><button class="chip" data-a="fdest" aria-pressed="${!!U.fDest}">Destacados</button><button class="chip" data-a="fdisp" aria-pressed="${!!U.fDisp}">Solo disponibles</button></div>`;
 }
+function catInfo(c){
+  const l=PV().filter(p=>p.cat===c.id); const pr=l.map(precioDesde).filter(Number.isFinite);
+  const p0=l.find(x=>fotoDe(x));
+  return {l,n:l.length,desde:pr.length?Math.min(...pr):0,img:c.img?imgSrc(c.img):(p0?fotoDe(p0):''),h:(l[0]&&l[0].h)??12,promo:l.some(esPromo)};
+}
+function categoriasLista(){
+  const cs=CATEGORIAS.filter(c=>c.visible!==false).map(c=>({c,i:catInfo(c)})).filter(x=>x.i.n);
+  if(!cs.length) return '';
+  return `<h2 class="sec-h" id="sec-carta" tabindex="-1">La carta</h2><div class="clist" role="list">${cs.map(({c,i})=>`<button class="cl" role="listitem" data-a="opencat" data-c="${c.id}"><span class="cl-img" style="--h:${i.h}">${i.img?`<img src="${esc(i.img)}" alt="" loading="lazy">`:'<span class="plate"></span>'}</span><span class="cl-t"><b>${esc(c.nombre)}</b><span class="muted">${i.n} plato${i.n>1?'s':''}${i.desde?` · <span class="desde num">Desde ${fmt(i.desde)}</span>`:''}</span>${i.promo?'<span class="pill ok">Con promoción</span>':''}</span></button>`).join('')}</div>`;
+}
+function openCat(id){ U.menuScroll=window.scrollY; U.catId=id; U.cq=''; go('categoria'); }
+function catListHtml(){
+  const c=CATEGORIAS.find(x=>x.id===U.catId); if(!c) return ''; const sd=sede();
+  let l=PV().filter(p=>p.cat===c.id); const q=norm(U.cq).trim();
+  if(q){ const tk=q.split(/\s+/); l=l.filter(p=>{ const h=norm(p.nombre+' '+p.desc); return tk.every(t=>h.includes(t)); }); }
+  return l.length?`<div class="grid">${l.map(p=>cardHtml(p,sd)).join('')}</div>`:`<div class="empty"><h2>No encontramos "${esc(U.cq.trim())}" aquí</h2><p class="muted">Prueba con otra palabra.</p></div>`;
+}
+function vCategoria(){
+  const c=CATEGORIAS.find(x=>x.id===U.catId); if(!c) return vMenu();
+  const sd=sede(), est=estadoServicio(sd,S.modo), i=catInfo(c), n=unidadesCarrito();
+  const proms=i.l.filter(p=>esPromo(p)&&!p.agotado);
+  const descs=[...new Set(i.l.map(p=>p.desc).filter(Boolean))];
+  return `<div class="cat-hero" style="--h:${i.h}">${i.img?`<img src="${esc(i.img)}" alt="">`:'<div class="plate"></div>'}
+    <div class="cat-top"><button class="cat-btn" data-a="catback" aria-label="Volver a la carta">${IC.back}</button>
+      <span class="cat-btns"><button class="cat-btn" data-a="catsearch" aria-label="Buscar en ${esc(c.nombre)}">${IC.search}</button>
+      <button class="cat-btn" data-a="go" data-s="cart" aria-label="Ver carrito, ${n} unidades">${IC.cart}${n?`<span class="cnt num">${n}</span>`:''}</button></span></div></div>
+  <div class="cat-sheet"><div class="hero-in">
+    <div class="cat-head"><span class="cat-logo" style="--h:${i.h}">${i.img?`<img src="${esc(i.img)}" alt="">`:''}</span><div><h1 class="cat-h1">${esc(c.nombre)}</h1><div class="muted">${i.n} plato${i.n>1?'s':''}${i.desde?` · <span class="desde num">Desde ${fmt(i.desde)}</span>`:''}</div></div></div>
+    <div class="cat-chips"><div class="status ${est.k}" role="status"><span class="dot"></span><div><b>${esc(est.txt)}</b><span>${esc(est.det)}</span></div></div>${descs.length===1?`<p class="cat-note">${esc(descs[0])}</p>`:''}</div>
+    <div class="sbox cat-search"><label class="sr" for="cq">Buscar en ${esc(c.nombre)}</label>${IC.search}<input id="cq" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" placeholder="Buscar en ${esc(c.nombre)}" value="${esc(U.cq)}"></div>
+    ${proms.length&&!U.cq?`<section><h2 class="sec-h">Promociones</h2><div class="pcs">${proms.map(p=>promoCard(p,sd)).join('')}</div></section>`:''}
+    <h2 class="sec-h">Todos los platos</h2><div id="cat-list">${catListHtml()}</div>
+    ${footerHtml()}
+  </div></div><div id="bar">${barHtml()}</div>`;
+}
 function homeBody(){
   const sd=sede(), plano=esPlano(); let h='';
   if(!plano){
@@ -786,7 +846,7 @@ function homeBody(){
     h+=l.length?`<h2 class="sec-h">${l.length} producto${l.length>1?'s':''}</h2><div class="grid">${l.map(p=>cardHtml(p,sd)).join('')}</div>`
       :`<div class="empty"><h2>${U.q.trim()?`No encontramos "${esc(U.q.trim())}"`:'No hay productos con esos filtros'}</h2><p class="muted">Revisa la ortografía o prueba con otra palabra, como "arroz" o "jugo".</p><button class="btn sec" data-a="clearq">Limpiar búsqueda y filtros</button></div>`;
   } else {
-    CATEGORIAS.filter(c=>c.visible!==false).forEach(c=>{ const l=PV().filter(p=>p.cat===c.id); if(l.length) h+=`<h2 class="sec-h" id="sec-${c.id}" tabindex="-1">${esc(c.nombre)}</h2><div class="grid">${l.map(p=>cardHtml(p,sd)).join('')}</div>`; });
+    h+=categoriasLista();
   }
   return h;
 }
@@ -901,7 +961,7 @@ function mergeLines(l){
   const k=lineKey(l); const twin=S.cart.find(x=>x.id!==l.id&&lineKey(x)===k);
   if(twin){ twin.qty=Math.min(99,twin.qty+l.qty); S.cart=S.cart.filter(x=>x.id!==l.id); }
 }
-function afterCart(){ if(U.screen==='menu'){ const b=document.getElementById('bar'); if(b) b.innerHTML=barHtml(); } else render(); }
+function afterCart(){ if(U.screen==='menu'||U.screen==='categoria'){ const b=document.getElementById('bar'); if(b) b.innerHTML=barHtml(); if(U.screen==='categoria'){ const cb=document.querySelector('.cat-btn[data-s=cart]'); if(cb){ const n=unidadesCarrito(); let k=cb.querySelector('.cnt'); if(n){ if(!k){ k=document.createElement('span'); k.className='cnt num'; cb.appendChild(k); } k.textContent=n; } else if(k) k.remove(); } } } else render(); }
 function quickAdd(pid, opener){
   const p=PM[pid]; if(!p||p.agotado||sede().agotados.includes(pid)) return;
   if(needsSheet(p)){ openProducto(pid,'',opener); return; }
@@ -1078,17 +1138,18 @@ function vTrack(){
    ========================================================================== */
 function render(){
   const s=U.screen;
-  app.innerHTML = s==='menu'?vMenu(): s==='cart'?vCart(): s==='entrega'?vEntrega(): s==='revision'?vRevision(): s==='admin'?vAdmin(): vTrack();
+  app.innerHTML = s==='menu'?vMenu(): s==='cart'?vCart(): s==='entrega'?vEntrega(): s==='revision'?vRevision(): s==='admin'?vAdmin(): s==='categoria'?vCategoria(): vTrack();
+  if(s==='menu'&&U.restoreScroll){ const y=U.menuScroll||0; U.restoreScroll=false; requestAnimationFrame(()=>window.scrollTo(0,y)); }
 }
 function go(s, opts={}){
   if(s==='cart'||s==='entrega'||s==='revision'){ U.errors={}; }
   if(s==='revision'){ revalidar(); U.errEnvio=''; }
   U.screen=s; render();
   if(!opts.keepScroll) window.scrollTo(0,0);
-  if(!opts.noPush){ try{ history.pushState({s},''); }catch(e){} }
+  if(!opts.noPush){ try{ history.pushState({s,c:U.catId},''); }catch(e){} }
   const h=app.querySelector('h1'); if(h&&s!=='menu'){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); }
 }
-window.addEventListener('popstate',e=>{ closeDialog(true); const s=e.state&&e.state.s; U.screen=['menu','cart','entrega','revision','track','admin'].includes(s)?s:'menu'; render(); });
+window.addEventListener('popstate',e=>{ closeDialog(true); const s=e.state&&e.state.s; U.screen=['menu','cart','entrega','revision','track','admin','categoria'].includes(s)?s:'menu'; if(s==='categoria'){ U.catId=e.state.c||U.catId; if(!CATEGORIAS.some(c=>c.id===U.catId)) U.screen='menu'; } if(U.screen==='menu') U.restoreScroll=true; render(); });
 try{ history.replaceState({s:'menu'},''); }catch(e){}
 
 function focusFirstError(ids){
@@ -1105,8 +1166,11 @@ document.addEventListener('click',async ev=>{
     case 'go': go(t.dataset.s); break;
     case 'open': openProducto(t.dataset.pid,'',t); break;
     case 'quick': quickAdd(t.dataset.pid,t); break;
-    case 'cat': { if(esPlano()){ U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); } const el=document.getElementById('sec-'+t.dataset.c); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); break; }
-    case 'cta': { if(U.screen!=='menu') break; const d=t.dataset.d; if(!d) break; if(esPlano()){ U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); } const el=document.getElementById('sec-'+d); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); break; }
+    case 'opencat': openCat(t.dataset.c); break;
+    case 'catback': { if(history.state&&history.state.s==='categoria'){ history.back(); } else { U.restoreScroll=true; go('menu',{noPush:true,keepScroll:true}); } break; }
+    case 'catsearch': { const q=document.getElementById('cq'); if(q){ q.scrollIntoView({block:'center',behavior:'smooth'}); q.focus({preventScroll:true}); } break; }
+    case 'cat': { if(t.dataset.c==='promos'){ U.q=''; U.sort=''; U.fPromo=true; U.fDest=U.fDisp=false; if(U.screen!=='menu'){ go('menu'); } else render(); window.scrollTo({top:document.getElementById('results').offsetTop-80,behavior:'smooth'}); break; } openCat(t.dataset.c); break; }
+    case 'cta': { if(U.screen!=='menu') break; const d=t.dataset.d; if(!d) break; if(CATEGORIAS.some(c=>c.id===d)){ openCat(d); break; } if(esPlano()){ U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); } const el=document.getElementById('sec-'+d); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); break; }
     case 'more': { U.q=''; U.sort=''; U.fPromo=t.dataset.k==='fPromo'; U.fDest=t.dataset.k==='fDest'; U.fDisp=false; render(); window.scrollTo({top:document.getElementById('results').offsetTop-80,behavior:'smooth'}); break; }
     case 'volver': { U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); window.scrollTo({top:0,behavior:'smooth'}); break; }
     case 'clearq': U.q=''; U.sort=''; U.fPromo=U.fDest=U.fDisp=false; render(); { const q=document.getElementById('q'); if(q) q.focus(); } break;
@@ -1193,6 +1257,7 @@ document.addEventListener('input',ev=>{
   const t=ev.target;
   if(t.dataset.af!==undefined){ adminInput(t); return; }
   if(t.id==='a-pq'){ A.pq=t.value; const l=document.getElementById('a-plist'); if(l) l.innerHTML=aProdList(); return; }
+  if(t.id==='cq'){ U.cq=t.value; const l=document.getElementById('cat-list'); if(l) l.innerHTML=catListHtml(); return; }
   if(t.id==='pk-q'){ A.pkq=t.value; const g=document.getElementById('pk-grid'); if(g) g.innerHTML=pickGrid(); return; }
   if(t.id==='q'){ U.q=t.value; const r=document.getElementById('results'); if(r) r.innerHTML=homeBody(); refreshSugg(true); return; }
   if(t.dataset.ch==='nota'){ D.nota=t.value; return; }

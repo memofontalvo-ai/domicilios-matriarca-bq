@@ -1,5 +1,16 @@
 # Historial de versiones — La Matriarca Domicilios
 
+## 1.2.2 — 2026-10-12
+- El "Desde $X" de cada grupo de la carta (lista y página del grupo) ahora va en naranja y negrita, igual que los precios.
+
+## 1.2.1 — 2026-10-12
+- Precios en naranja, más grandes y en negrita para que resalten (también en modo oscuro). El precio anterior tachado queda debajo y la etiqueta de promoción es una píldora naranja.
+
+## 1.2.0 — 2026-10-12
+- La carta ahora se muestra por grupos (Lunch, Entradas, Parrilla, Chicharronería…) con foto, cantidad de platos y precio "Desde".
+- Al tocar un grupo se abre su página: foto grande arriba, nombre, estado del servicio, buscador propio, promociones del grupo y todos sus platos. Con botón de volver, carrito y buscar.
+- Los iconos redondos de arriba, el menú de categorías y el botón del banner abren la página del grupo.
+
 ## 1.1.1 — 2026-10-12
 - Botón "Volver a toda la carta" cuando hay una búsqueda o filtro activo: limpia el buscador y los filtros y regresa al inicio.
 
